@@ -7,4 +7,7 @@ dependencies {
     runtimeOnly "org.hibernate:hibernate-jcache"
     runtimeOnly group: 'org.ehcache', name: 'ehcache'
     runtimeOnly group: 'org.postgresql', name: 'postgresql'
+
+    // Docker hook for adding build dependencies DO NOT DELETE
+    //DOCKER_HOOK
 }
