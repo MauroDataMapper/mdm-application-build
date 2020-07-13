@@ -94,7 +94,6 @@ dependencies {
     profile "org.grails.profiles:base:4.1.0.OXBRC", {
         transitive false
     }
-    provided "org.springframework.boot:spring-boot-starter-tomcat"
     runtime "org.glassfish.web:el-impl:2.1.2-b03"
     runtime "com.h2database:h2"
     runtime "org.apache.tomcat:tomcat-jdbc"
