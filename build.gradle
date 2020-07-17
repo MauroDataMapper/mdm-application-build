@@ -129,7 +129,14 @@ grails {
         compile 'uk.ac.ox.softeng.maurodatamapper:mdm-security:4.0.0-SNAPSHOT'
         compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:4.0.0-SNAPSHOT'
     }
+    if (org.gradle.internal.os.OperatingSystem.current() == org.gradle.internal.os.OperatingSystem.WINDOWS) {
+        logger.quiet('Using pathing Jar as running in Windows OS')
+        pathingJar = true
+    }
 }
+
+// Ensure the compile task in gradle runs all the classes tasks.
+compile.dependsOn(tasks.findAll {it.name.toLowerCase().endsWith('classes')})
 
 license {
     header = file("${rootDir}/NOTICE")
@@ -147,3 +154,35 @@ license {
 }
 
 apply from: 'dependencies.gradle'
+
+project.afterEvaluate {
+
+    project.tasks.withType(JavaCompile) {JavaCompile c ->
+        c.options.fork = true
+        c.options.encoding = 'UTF-8'
+        //compile.options.incremental = useIncrementalJavaBuilding.toBoolean()
+        c.options.compilerArgs.add('-Xlint:unchecked')
+        c.options.compilerArgs.add('-Xlint:deprecation')
+    }
+    project.tasks.withType(GroovyCompile) {GroovyCompile c ->
+        c.options.fork = true
+        c.options.encoding = 'UTF-8'
+    }
+    project.tasks.withType(Jar) {
+        Map attrs = [
+            "Created-By"            : "${JavaVersion.current().toString()} JVM, ${project.gradle.gradleVersion} Gradle",
+            "Specification-Title"   : "$project.rootProject.name $project.name Classes",
+            "Specification-Version" : project.version,
+            "Implementation-Title"  : "${project.group.toLowerCase()}.${project.name.toLowerCase()}",
+            "Implementation-Version": "${project.version}.dev",
+            "Implementation-Vendor" : "Oxford University",
+        ]
+        if (project.hasProperty('mainClass'))
+            attrs.'Main-Class' = project.mainClass
+
+        manifest {
+            attributes(attrs)
+        }
+        group 'archives'
+    }
+}
