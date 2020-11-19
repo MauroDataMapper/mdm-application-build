@@ -129,6 +129,7 @@ grails {
         compile 'uk.ac.ox.softeng.maurodatamapper:mdm-security:4.0.0-SNAPSHOT'
         compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:4.0.0-SNAPSHOT'
         compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-dataflow:4.0.0-SNAPSHOT'
+        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:4.0.0-SNAPSHOT'
     }
     if (org.gradle.internal.os.OperatingSystem.current() == org.gradle.internal.os.OperatingSystem.WINDOWS) {
         logger.quiet('Using pathing Jar as running in Windows OS')
