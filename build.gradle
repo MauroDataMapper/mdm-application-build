@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 import java.util.concurrent.TimeUnit
 
 buildscript {
@@ -123,16 +125,16 @@ bootRun {
 
 grails {
     plugins {
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-core:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-security:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-apikey:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-basic:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-dataflow:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-datamodel:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:4.0.0-SNAPSHOT'
-        compile 'uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:4.0.0-SNAPSHOT'
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-core:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-security:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-apikey:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-basic:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-dataflow:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-datamodel:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:$mdmCoreVersion"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:$mdmCoreVersion"
     }
-    if (org.gradle.internal.os.OperatingSystem.current() == org.gradle.internal.os.OperatingSystem.WINDOWS) {
+    if (OperatingSystem.current() == OperatingSystem.WINDOWS) {
         logger.quiet('Using pathing Jar as running in Windows OS')
         pathingJar = true
     }
