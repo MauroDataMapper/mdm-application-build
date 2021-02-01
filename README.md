@@ -5,13 +5,13 @@ Currently it only builds the backend, the front end would needed to be added man
 
 ## Requirements
 
-* Grails 4.0.3 +
-* Gradle 6.3
+* Grails 4.0.6 +
+* Gradle 6.7.1
 * Java OpenJDK 12
 
 All of the above can be installed an easily maintained by using [SDKMAN!](https://sdkman.io).
 
-*Grails 4.0.3 will not run in any version above Java 12, and Grails 4 will not work on any version below Java 11*
+*Grails 4.0.6 will not run in any version above Java 12, and Grails 4 will not work on any version below Java 11*
 
 ## Building
 
