@@ -12,6 +12,9 @@ apiUser:
 maurodatamapper:
     security:
         public: false
+    authority:
+        name: 'Mauro Data Mapper'
+        url: http://localhost
 grails:
     profile: rest-api
     codegen:
@@ -133,7 +136,7 @@ hibernate:
             provider: org.ehcache.jsr107.EhcacheCachingProvider
             missing_cache_strategy: create
     search:
-        default.indexBase: '/tmp/lucene/security'
+        default.indexBase: '/tmp/lucene/mdm_application'
 
 ---
 dataSource:
