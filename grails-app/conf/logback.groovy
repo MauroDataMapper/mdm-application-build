@@ -40,7 +40,7 @@ final String DEFAULT_LOG_FILENAME = "mauro-data-mapper"
 
 String logFilename = DEFAULT_LOG_FILENAME
 
-def tomcatHome = System.getProperty('catalina.home') ?: System.getenv('CATALINA_HOME') ?: 'logs'
+def tomcatHome = System.getProperty('catalina.home') ?: System.getenv('CATALINA_HOME') ?: '.'
 // prod env / no sys props being passed in
 File logDir = new File("${tomcatHome}/logs/mauro-data-mapper")
 
@@ -81,7 +81,7 @@ appender("FILE", RollingFileAppender) {
 root(INFO, ['STDOUT', 'FILE'])
 
 
-logger('ox.softeng', DEBUG)
+logger('uk.ac.ox.softeng', DEBUG)
 logger('db.migration', DEBUG)
 
 logger('org.springframework.jdbc.core.JdbcTemplate', DEBUG)
@@ -93,7 +93,6 @@ logger('org.hibernate.search.batchindexing.impl.BatchIndexingWorkspace', DEBUG)
 // logger 'org.hibernate.type', TRACE
 
 
-logger('ox.softeng.metadatacatalogue.plugins.xsd.wrapper', INFO)
 logger('org.grails.spring.beans.factory.OptimizedAutowireCapableBeanFactory', ERROR)
 logger('org.springframework.context.support.PostProcessorRegistrationDelegate', WARN)
 logger('org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory', ERROR)

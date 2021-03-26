@@ -133,6 +133,7 @@ grails {
         compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-datamodel:$version"
         compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:$version"
         compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:$version"
+        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-profile:$version"
     }
     if (OperatingSystem.current() == OperatingSystem.WINDOWS) {
         logger.quiet('Using pathing Jar as running in Windows OS')
