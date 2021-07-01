@@ -162,6 +162,11 @@ license {
 
 apply from: 'dependencies.gradle'
 
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.SECONDS
+}
+
 project.afterEvaluate {
 
     project.tasks.withType(JavaCompile) {JavaCompile c ->
