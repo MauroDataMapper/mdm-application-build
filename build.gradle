@@ -125,16 +125,16 @@ bootRun {
 
 grails {
     plugins {
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-core:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-security:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-apikey:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-basic:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-dataflow:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-datamodel:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-profile:$version"
-        compile "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-federation:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-core:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-security:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-apikey:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-basic:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-dataflow:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-datamodel:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-referencedata:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-terminology:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-profile:$version"
+        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-federation:$version"
     }
     if (OperatingSystem.current() == OperatingSystem.WINDOWS) {
         logger.quiet('Using pathing Jar as running in Windows OS')
