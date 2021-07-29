@@ -16,6 +16,8 @@ import org.springframework.core.env.PropertySource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 
+import java.nio.file.Path
+
 /**
  * @since 14/11/2017
  */
@@ -39,14 +41,20 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
         MutablePropertySources propertySources = config.getPropertySources()
 
         try {
-            PropertySource propertySource = loadPropertySourceForFile(BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, '/build.yml')
+            PropertySource propertySource = loadPropertySourceForResource(BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, '/build.yml')
             addPropertySourceToPropertySources(propertySource, APPLICATION_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, config, propertySources)
         } catch (Exception ignored) {
             log.warn("Build configuration file was not loaded", ignored)
         }
 
+        String filePath = System.getenv('runtime.config.path')
+        if(!filePath){
+            log.info("Runtime configuration file was not supplied")
+            return
+        }
+
         try {
-            PropertySource propertySource = loadPropertySourceForFile(RUNTIME_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, '/runtime.yml')
+            PropertySource propertySource = loadPropertySourceForFilePath(RUNTIME_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, filePath)
             String placement = propertySources.contains(BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE) ? BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE :
                                APPLICATION_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE
             addPropertySourceToPropertySources(propertySource, placement, config, propertySources)
@@ -64,18 +72,25 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
         }
     }
 
-    PropertySource loadPropertySourceForFile(String propertySourceName, String fileName) {
+    PropertySource loadPropertySourceForResource(String propertySourceName, String fileName) {
+        URL urlToConfig = IOUtils.findResourceRelativeToClass(Application, fileName)
+        loadPropertySourceForUrl(propertySourceName, urlToConfig)
+    }
+
+    PropertySource loadPropertySourceForFilePath(String propertySourceName, String filePath) {
+        URI uriToConfig = Path.of(filePath).toAbsolutePath().toUri()
+        loadPropertySourceForUrl(propertySourceName, uriToConfig.toURL())
+    }
+
+    PropertySource loadPropertySourceForUrl(String propertySourceName, URL uriToConfig) {
         try {
-            final URL urlToConfig = IOUtils.findResourceRelativeToClass(Application, fileName)
-            if (urlToConfig != null) {
-                Resource resource = new UrlResource(urlToConfig)
-                PropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader()
-                return propertySourceLoader.load(propertySourceName, resource).first()
-            }
+            Resource resource = new UrlResource(uriToConfig)
+            PropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader()
+            return propertySourceLoader.load(propertySourceName, resource).first()
         }
         catch (Exception ignored) {
         }
-        log.warn("Configuration file for [{}] not present", propertySourceName)
+        log.warn("Configuration file for [{}] not present at [{}]", propertySourceName, uriToConfig)
         null
     }
 }
