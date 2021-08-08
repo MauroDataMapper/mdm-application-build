@@ -17,7 +17,10 @@
  */
 package uk.ac.ox.softeng.maurodatamapper.application
 
+import uk.ac.ox.softeng.maurodatamapper.application.boot.RuntimeGrailsApplicationPostProcessor
+
 import grails.boot.GrailsApp
+import grails.boot.config.GrailsApplicationPostProcessor
 import grails.boot.config.GrailsAutoConfiguration
 import groovy.transform.CompileStatic
 import org.springframework.context.annotation.ComponentScan
@@ -27,5 +30,10 @@ import org.springframework.context.annotation.ComponentScan
 class Application extends GrailsAutoConfiguration {
     static void main(String[] args) {
         GrailsApp.run(Application, args)
+    }
+
+    @Override
+    GrailsApplicationPostProcessor grailsApplicationPostProcessor() {
+        new RuntimeGrailsApplicationPostProcessor(this, applicationContext, classes() as Class[])
     }
 }
