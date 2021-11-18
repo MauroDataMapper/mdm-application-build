@@ -136,10 +136,6 @@ grails {
         runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-profile:$version"
         runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-federation:$version"
     }
-    if (OperatingSystem.current() == OperatingSystem.WINDOWS) {
-        logger.quiet('Using pathing Jar as running in Windows OS')
-        pathingJar = true
-    }
 }
 
 // Ensure the compile task in gradle runs all the classes tasks.
