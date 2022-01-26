@@ -132,7 +132,9 @@ hibernate:
             provider: org.ehcache.jsr107.EhcacheCachingProvider
             missing_cache_strategy: create
     search:
-        default.indexBase: '/tmp/lucene/mdm_application'
+        backend:
+            directory:
+                root: '/tmp/lucene/mdm_application'
 
 ---
 dataSource:
