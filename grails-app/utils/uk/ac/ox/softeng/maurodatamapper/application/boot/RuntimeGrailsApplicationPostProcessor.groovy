@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020-2022 University of Oxford and Health and Social Care Information Centre, also known as NHS Digital
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package uk.ac.ox.softeng.maurodatamapper.application.boot
 
 import uk.ac.ox.softeng.maurodatamapper.application.Application
@@ -24,7 +41,7 @@ import java.nio.file.Path
 @Slf4j
 class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcessor {
 
-    public static final String APPLICATION_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE = 'applicationConfig: [classpath:/application.yml]'
+    public static final String ENVIRONMENT_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE = 'systemEnvironment'
     public static final String RUNTIME_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE = 'runtimeConfiguration'
     public static final String BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE = 'buildConfiguration'
 
@@ -42,7 +59,7 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
 
         try {
             PropertySource propertySource = loadPropertySourceForResource(BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, '/build.yml')
-            addPropertySourceToPropertySources(propertySource, APPLICATION_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, config, propertySources)
+            addPropertySourceToPropertySources(propertySource, ENVIRONMENT_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, config, propertySources)
         } catch (Exception ignored) {
             log.warn("Build configuration file was not loaded", ignored)
         }
@@ -55,9 +72,7 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
 
         try {
             PropertySource propertySource = loadPropertySourceForFilePath(RUNTIME_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, filePath)
-            String placement = propertySources.contains(BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE) ? BUILD_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE :
-                               APPLICATION_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE
-            addPropertySourceToPropertySources(propertySource, placement, config, propertySources)
+            addPropertySourceToPropertySources(propertySource, ENVIRONMENT_CONFIGURATION_PROPERTIES_PROPERTY_SOURCE, config, propertySources)
         } catch (Exception ignored) {
             log.warn("Runtime configuration file was not loaded", ignored)
         }
@@ -66,7 +81,7 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
 
     void addPropertySourceToPropertySources(PropertySource propertySource, String placement, PropertySourcesConfig config, MutablePropertySources propertySources) {
         if (propertySource) {
-            propertySources.addBefore placement, propertySource
+            propertySources.addAfter placement, propertySource
             config.refresh()
             log.info('Updated property sources to include properties from {} configuration file', propertySource.getName())
         }
