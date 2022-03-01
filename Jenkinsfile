@@ -33,14 +33,12 @@ pipeline {
         stage('Info') {
             steps {
                 sh './gradlew -v' // Output gradle version for verification checks
-                sh './gradlew jvmArgs sysProps'
                 sh './grailsw -v' // Output grails version for verification checks
             }
         }
 
         stage('Test cleanup & Compile') {
             steps {
-                sh "./gradlew jenkinsClean"
                 sh './gradlew compile'
             }
         }
@@ -64,25 +62,25 @@ pipeline {
             }
         }
 
-        stage('Deploy to Artifactory') {
-            when {
-                allOf {
-                    anyOf {
-                       branch 'main'
-                        branch 'develop'
-                    }
-                    expression {
-                        currentBuild.currentResult == 'SUCCESS'
-                    }
-                }
-
-            }
-            steps {
-                script {
-                    sh "./gradlew --build-cache publish"
-                }
-            }
-        }
+//        stage('Deploy to Artifactory') {
+//            when {
+//                allOf {
+//                    anyOf {
+//                       branch 'main'
+//                        branch 'develop'
+//                    }
+//                    expression {
+//                        currentBuild.currentResult == 'SUCCESS'
+//                    }
+//                }
+//
+//            }
+//            steps {
+//                script {
+//                    sh "./gradlew --build-cache publish"
+//                }
+//            }
+//        }
     }
 
     post {
