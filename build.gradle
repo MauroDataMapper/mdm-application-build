@@ -106,7 +106,7 @@ bootRun {
         '-Dspring.output.ansi.enabled=always',
         '-noverify',
         '-XX:TieredStopAtLevel=1',
-        '-Xmx1024m')
+        '-Xmx8g')
     sourceResources sourceSets.main
 
     System.properties.each {prop ->
