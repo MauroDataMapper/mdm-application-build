@@ -120,7 +120,7 @@ bootRun {
 
 grails {
     plugins {
-        runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-core:$version"
+        implementation "uk.ac.ox.softeng.maurodatamapper:mdm-core:$version"
         runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-security:$version"
         runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-apikey:$version"
         runtimeOnly "uk.ac.ox.softeng.maurodatamapper:mdm-plugin-authentication-basic:$version"
