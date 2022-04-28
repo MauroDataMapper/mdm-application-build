@@ -1,4 +1,5 @@
 dependencies {
+    implementation platform("uk.ac.ox.softeng.maurodatamapper:mdm-bom:$version")
     runtimeOnly "io.methvin:directory-watcher", {
         exclude group: 'com.google.guava', module: 'guava'
     }

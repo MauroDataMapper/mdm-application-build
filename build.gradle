@@ -1,3 +1,10 @@
+import io.spring.gradle.dependencymanagement.internal.DependencyManagementConfigurationContainer
+import io.spring.gradle.dependencymanagement.internal.maven.MavenPomResolver
+import io.spring.gradle.dependencymanagement.internal.pom.Coordinates
+import io.spring.gradle.dependencymanagement.internal.pom.Pom
+import io.spring.gradle.dependencymanagement.internal.pom.PomReference
+import io.spring.gradle.dependencymanagement.internal.properties.MapPropertySource
+import io.spring.gradle.dependencymanagement.internal.properties.ProjectPropertySource
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 import java.util.concurrent.TimeUnit
@@ -33,6 +40,7 @@ apply plugin: "org.grails.grails-web"
 apply plugin: "org.grails.plugins.views-json"
 apply plugin: "org.grails.plugins.views-markup"
 apply plugin: 'ox.softeng.ox-brc-base'
+
 
 repositories {
     mavenLocal()
@@ -152,7 +160,9 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.SECONDS
 }
 
-project.afterEvaluate {
+controlVersionPropertiesFromMdmBom()
+
+afterEvaluate {
 
     project.tasks.withType(JavaCompile) {JavaCompile c ->
         c.options.fork = true
@@ -181,5 +191,17 @@ project.afterEvaluate {
             attributes(attrs)
         }
         group 'archives'
+    }
+}
+
+// Pulls the properties from the mdm-bom and applies them to the project
+// Theres collisions between the gradle platform and spring dependency plugin which result in the versions we want not being used
+void controlVersionPropertiesFromMdmBom() {
+    MavenPomResolver pomResolver = new MavenPomResolver(project, new DependencyManagementConfigurationContainer(project))
+    Coordinates bomCoords = new Coordinates('uk.ac.ox.softeng.maurodatamapper', 'mdm-bom', version)
+    PomReference pomReference = new PomReference(bomCoords, new MapPropertySource([:]))
+    List<Pom> resolvedPoms = pomResolver.resolvePoms([pomReference], new ProjectPropertySource(project))
+    resolvedPoms.first().properties.sort().each {k, v ->
+        project.ext[k] = v
     }
 }
