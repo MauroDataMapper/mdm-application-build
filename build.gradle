@@ -17,29 +17,23 @@ buildscript {
         maven {url "https://repo.grails.org/grails/core"}
     }
     dependencies {
-        classpath "ox.softeng.gradle:oxbrcinformatics-gradle-plugins:$oxbrcinformaticsGradlePluginsVersion"
+        classpath "uk.ac.ox.softeng.maurodatamapper.gradle:mdm-gradle-plugin:$mdmGradlePluginVersion"
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
         classpath "org.grails.plugins:hibernate5:$grailsHibernate5Version"
         classpath "org.grails.plugins:views-gradle:$grailsViewsVersion"
     }
-    configurations.all {
-        // check for updates every build
-        resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.SECONDS
-    }
 }
 
+project.ext['mdmCoreVersion'] = version
 
-plugins {
-    id 'project-report'
-    id "com.github.hierynomus.license" version "${licenseGradlePluginVersion}"
-}
 
 apply plugin: "idea"
 apply plugin: "war"
 apply plugin: "org.grails.grails-web"
 apply plugin: "org.grails.plugins.views-json"
 apply plugin: "org.grails.plugins.views-markup"
-apply plugin: 'ox.softeng.ox-brc-base'
+
+apply plugin: 'uk.ac.ox.softeng.maurodatamapper.gradle.mdm-grails'
 
 
 repositories {
@@ -136,45 +130,10 @@ grails {
     }
 }
 
-
-license {
-    header = file("${rootDir}/gradle/NOTICE.tmpl")
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    excludes([
-        '**/*.gson',
-        '**/*.yml',
-        '**/META-INF/**',
-        '**/*.txt',
-        '**/*.json',
-        '**/*.gml',
-        '**/*.jpeg',
-        '**/*.png',
-        '**/*.xml'
-    ])
-}
-
 apply from: 'dependencies.gradle'
-
-configurations.all {
-    // check for updates every build
-    resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.SECONDS
-}
-
-controlVersionPropertiesFromMdmBom()
 
 afterEvaluate {
 
-    project.tasks.withType(JavaCompile) {JavaCompile c ->
-        c.options.fork = true
-        c.options.encoding = 'UTF-8'
-        //compile.options.incremental = useIncrementalJavaBuilding.toBoolean()
-        c.options.compilerArgs.add('-Xlint:unchecked')
-        c.options.compilerArgs.add('-Xlint:deprecation')
-    }
-    project.tasks.withType(GroovyCompile) {GroovyCompile c ->
-        c.options.fork = true
-        c.options.encoding = 'UTF-8'
-    }
     project.tasks.withType(Jar) {
         Map attrs = [
             "Created-By"            : "${JavaVersion.current().toString()} JVM, ${project.gradle.gradleVersion} Gradle",
@@ -191,17 +150,5 @@ afterEvaluate {
             attributes(attrs)
         }
         group 'archives'
-    }
-}
-
-// Pulls the properties from the mdm-bom and applies them to the project
-// Theres collisions between the gradle platform and spring dependency plugin which result in the versions we want not being used
-void controlVersionPropertiesFromMdmBom() {
-    MavenPomResolver pomResolver = new MavenPomResolver(project, new DependencyManagementConfigurationContainer(project))
-    Coordinates bomCoords = new Coordinates('uk.ac.ox.softeng.maurodatamapper', 'mdm-bom', version)
-    PomReference pomReference = new PomReference(bomCoords, new MapPropertySource([:]))
-    List<Pom> resolvedPoms = pomResolver.resolvePoms([pomReference], new ProjectPropertySource(project))
-    resolvedPoms.first().properties.sort().each {k, v ->
-        project.ext[k] = v
     }
 }

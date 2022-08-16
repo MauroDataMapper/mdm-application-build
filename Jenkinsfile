@@ -33,12 +33,14 @@ pipeline {
         stage('Info') {
             steps {
                 sh './gradlew -v' // Output gradle version for verification checks
+                sh './gradlew jvmArgs sysProps'
                 sh './grailsw -v' // Output grails version for verification checks
             }
         }
 
         stage('Test cleanup & Compile') {
             steps {
+                sh "./gradlew jenkinsClean"
                 sh './gradlew compile'
             }
         }
@@ -51,9 +53,39 @@ pipeline {
             }
         }
 
+//        stage('Unit Test') {
+//
+//            steps {
+//                sh "./gradlew --build-cache test"
+//            }
+//            post {
+//                always {
+//                    junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
+//                }
+//            }
+//        }
+//
+//        stage('Integration Test') {
+//
+//            steps {
+//                sh "./gradlew --build-cache integrationTest"
+//            }
+//            post {
+//                always {
+//                    junit allowEmptyResults: true, testResults: 'build/test-results/integrationTest/*.xml'
+//                }
+//            }
+//        }
+
+        stage('Static Code Analysis') {
+            steps {
+                sh "./gradlew -PciRun=true staticCodeAnalysis jacocoTestReport"
+            }
+        }
+
         stage('Sonarqube') {
             when {
-                branch 'main'
+                branch 'develop'
             }
             steps {
                 withSonarQubeEnv('JenkinsQube') {
@@ -66,7 +98,7 @@ pipeline {
 //            when {
 //                allOf {
 //                    anyOf {
-//                       branch 'main'
+//                        branch 'main'
 //                        branch 'develop'
 //                    }
 //                    expression {
@@ -77,7 +109,7 @@ pipeline {
 //            }
 //            steps {
 //                script {
-//                    sh "./gradlew --build-cache publish"
+//                    sh "./gradlew publish"
 //                }
 //            }
 //        }
@@ -85,6 +117,26 @@ pipeline {
 
     post {
         always {
+//            publishHTML([
+//                allowMissing         : false,
+//                alwaysLinkToLastBuild: true,
+//                keepAll              : true,
+//                reportDir            : 'build/reports/tests',
+//                reportFiles          : 'index.html',
+//                reportName           : 'Test Report',
+//                reportTitles         : 'Test'
+//            ])
+
+            recordIssues enabledForFailure: true, tools: [java(), javaDoc()]
+            recordIssues enabledForFailure: true, tool: checkStyle(pattern: '**/reports/checkstyle/*.xml')
+            recordIssues enabledForFailure: true, tool: codeNarc(pattern: '**/reports/codenarc/*.xml')
+            recordIssues enabledForFailure: true, tool: spotBugs(pattern: '**/reports/spotbugs/*.xml', useRankAsPriority: true)
+            recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/reports/pmd/*.xml')
+
+//            publishCoverage adapters: [jacocoAdapter('**/reports/jacoco/jacocoTestReport.xml')]
+//            outputTestResults()
+//            jacoco classPattern: '**/build/classes', execPattern: '**/build/jacoco/*.exec', sourceInclusionPattern: '**/*.java,**/*.groovy', sourcePattern: '**/src/main/groovy,**/grails-app/controllers,**/grails-app/domain,**/grails-app/services,**/grails-app/utils'
+//            archiveArtifacts allowEmptyArchive: true, artifacts: '**/*.log'
             zulipNotification(topic: 'mdm-application-build')
         }
     }
