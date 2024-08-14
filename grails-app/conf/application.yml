@@ -146,6 +146,12 @@ hibernate:
         backend:
             directory:
                 root: '/tmp/lucene/mdm_application'
+        default:
+            indexwriter:
+                transaction:
+                    use_compound_file: false
+                    ram_buffer_size: 1Gb
+
 
 ---
 dataSource:
@@ -163,3 +169,16 @@ grails:
     plugins:
         hibernatesearch:
             rebuildIndexOnStart: false
+            default:
+                indexwriter:
+                    transaction:
+                        use_compound_file: false
+                        ram_buffer_size: 1024
+
+simplejavamail:
+    smtp:
+        username: 'metadatacatalogue@gmail.com'
+        password: 'cfgwzfaocqjfgdkj'
+        host: smtp.gmail.com
+        port: 587
+    transportstrategy: SMTP_TLS
