@@ -174,11 +174,3 @@ grails:
                     transaction:
                         use_compound_file: false
                         ram_buffer_size: 1024
-
-simplejavamail:
-    smtp:
-        username: 'metadatacatalogue@gmail.com'
-        password: 'cfgwzfaocqjfgdkj'
-        host: smtp.gmail.com
-        port: 587
-    transportstrategy: SMTP_TLS
