@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit
 buildscript {
     repositories {
         mavenLocal()
-        maven {url "https://jenkins.cs.ox.ac.uk/artifactory/plugins-snapshot"}
-        maven {url "https://jenkins.cs.ox.ac.uk/artifactory/plugins-release"}
+        maven {url "https://mauro-repository.com/plugins-snapshot-local"}
+        maven {url "https://mauro-repository.com/plugins-release-local"}
         maven {url "https://repo.grails.org/grails/core"}
     }
     dependencies {
-        classpath "uk.ac.ox.softeng.maurodatamapper.gradle:mdm-gradle-plugin:$mdmGradlePluginVersion"
+        classpath "org.maurodata:mdm-gradle-plugin:$mdmGradlePluginVersion"
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
         classpath "org.grails.plugins:hibernate5:$grailsHibernate5Version"
         classpath "org.grails.plugins:views-gradle:$grailsViewsVersion"
@@ -38,9 +38,11 @@ apply plugin: 'uk.ac.ox.softeng.maurodatamapper.gradle.mdm-grails'
 
 repositories {
     mavenLocal()
-    maven {url "https://jenkins.cs.ox.ac.uk/artifactory/libs-release"}
-    maven {url "https://jenkins.cs.ox.ac.uk/artifactory/libs-snapshot"}
+    mavenCentral()
+    maven {url "https://mauro-repository.com/libs-snapshot-local"}
+    maven {url "https://mauro-repository.com/libs-release-local"}
     maven {url "https://repo.grails.org/grails/core"}
+    maven {url "https://mauro-repository.com/libs-mirror"} // catch-all for obscure jars
 }
 
 configurations {

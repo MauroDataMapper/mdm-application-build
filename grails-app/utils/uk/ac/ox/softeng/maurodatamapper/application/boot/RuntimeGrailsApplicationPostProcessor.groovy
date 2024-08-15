@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 University of Oxford and NHS England
+ * Copyright 2020-2024 University of Oxford and NHS England
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,11 @@ import grails.core.DefaultGrailsApplication
 import grails.core.GrailsApplicationLifeCycle
 import grails.io.IOUtils
 import groovy.util.logging.Slf4j
+import org.apache.lucene.index.IndexWriterConfig
 import org.grails.config.PropertySourcesConfig
 import org.grails.config.yaml.YamlPropertySourceLoader
+import org.hibernate.search.mapper.orm.Search
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.env.PropertySourceLoader
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.MutablePropertySources
@@ -50,11 +53,23 @@ class RuntimeGrailsApplicationPostProcessor extends GrailsApplicationPostProcess
         super(lifeCycle, applicationContext, classes)
     }
 
+    @Autowired
+    IndexWriterConfig indexWriterConfig
+
+
     @Override
     protected void loadApplicationConfig() {
         super.loadApplicationConfig()
 
+        System.err.println("Configuring here")
+        System.err.println(Search.properties)
+        //System.err.println(System.getProperties())
+        System.err.println(indexWriterConfig)
+
+
+
         PropertySourcesConfig config = ((DefaultGrailsApplication) grailsApplication).config
+        System.err.println(config)
         MutablePropertySources propertySources = config.getPropertySources()
 
         try {
