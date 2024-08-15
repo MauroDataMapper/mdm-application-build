@@ -38,9 +38,11 @@ apply plugin: 'uk.ac.ox.softeng.maurodatamapper.gradle.mdm-grails'
 
 repositories {
     mavenLocal()
+    mavenCentral()
     maven {url "https://mauro-repository.com/libs-snapshot-local"}
     maven {url "https://mauro-repository.com/libs-release-local"}
     maven {url "https://repo.grails.org/grails/core"}
+    maven {url "https://mauro-repository.com/libs-mirror"} // catch-all for obscure jars
 }
 
 configurations {
