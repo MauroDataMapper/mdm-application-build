@@ -12,9 +12,12 @@ import java.util.concurrent.TimeUnit
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         maven {url "https://mauro-repository.com/plugins-snapshot-local"}
         maven {url "https://mauro-repository.com/plugins-release-local"}
+        maven { url "https://mauro-repository.com/libs-snapshot-local" }
         maven {url "https://repo.grails.org/grails/core"}
+        maven {url 'https://plugins.gradle.org/m2/'}
     }
     dependencies {
         classpath "org.maurodata:mdm-gradle-plugin:$mdmGradlePluginVersion"
